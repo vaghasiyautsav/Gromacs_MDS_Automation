@@ -78,7 +78,7 @@ This repository contains scripts to automate the process of setting up and runni
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed.
 
 ## Acknowledgments
 
