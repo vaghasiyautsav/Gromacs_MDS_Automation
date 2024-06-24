@@ -35,18 +35,16 @@ run_command_in_folders() {
     for folder in "${selected_folders[@]}"; do
         echo "Processing folder: $folder"
         cd "$folder" || continue
-        for pdb_file in *.pdb; do
-            if [[ -f "$pdb_file" ]]; then
-                echo "Processing file: $pdb_file"
-                echo -e "8\n1" |gmx pdb2gmx -f "$pdb_file" -ignh && gmx editconf -f LIG.pdb -o lig.gro
-            else
-                echo "No .pdb files found in $folder"
-            fi
-        done
+        echo -e "8\n1" | gmx pdb2gmx -f "$file_name" -ignh && gmx editconf -f LIG.pdb -o lig.gro
         cd ..
     done
 }
 
 # Main script execution
 select_folders
+
+# Enable tab completion for file name input
+echo "Enter the file name for the -f option (e.g., final_TLR8.pdb):"
+read -e -p "> " file_name
+
 run_command_in_folders
