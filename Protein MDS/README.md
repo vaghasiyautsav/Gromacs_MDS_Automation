@@ -11,24 +11,34 @@ This repository contains scripts to automate the process of setting up and runni
 
 ## GROMACS Simulation Steps
 
-### Step 1: Generate GRO and Topology Files
+## Auto Gromacs 
 
-1. Update the PDB file name in `step1_1_groAndTopolFileGeneration.sh` to match your protein file (e.g., `final_TLR7.pdb`).
-2. Open the current folder in a terminal.
-3. Run the following command:
-   ```bash
-   bash step1_1_groAndTopolFileGeneration.sh
+1. Run Following command in terminal to start auto gromacs script
+```
+bash autoGromacs.sh
+```
+   1. Script will ask for Starting time and end time of simulation in Nano Seconds.
+   2. Then user will be asked to select folders from the list in number reprented. Selected all folders and put "d" at the end and press Enter.
+   Example 
    ```
-4. Script will ask user to give the name of protein which is present in parent directory as well as in each folders.
+(base) vaxine@vgpu1:/media/vaxine/Expansion/Gromacs Base/Gromacs_MDS_Automation/Gromacs_MDS_Automation/Protein MDS$ bash autoGromacs.sh 
+Enter the start time in nano seconds (typically 0): 0
+Enter the end time in nano seconds: 1
+Available folders:
+1) protein1/
+2) protein2/
+3) Protein
+4) MDP
+5) Files/
+6) Done
+Select folders (enter numbers separated by spaces, press 'd' when done): 1 2 d
 
-### Step 4: Run GROMACS Simulation
-
-1. This bash script contains the code to run GROMACS commands sequentially to perform the simulation production.
-2. Edit `md.mdp` if you have any specific requirements for the production run.
-3. Run the following command:
-   ```bash
-   bash step1_2_gromacsauto.sh
    ```
+   3. And Script will do the rest. Happy Simulating !!
+
+- I have kept two seperate bash script just in case anyone wants to do experiment on scripts. 
+
+
 
 ## Directory Structure
 
@@ -36,8 +46,12 @@ This repository contains scripts to automate the process of setting up and runni
 ├── Parent Folder
 │   ├── step1_1_groAndTopolFileGeneration.sh
 │   ├── step1_2_gromacsauto.sh
-├── Protein_folder
-│   ├── final_TLR7.pdb
+│   ├── autoGromacs.sh
+├── Protein1_folder
+│   ├── protein1.pdb
+│   ├── *.mdp
+├── Protein2_folder
+│   ├── protein2.pdb
 │   ├── *.mdp
 ```
 

@@ -1,0 +1,49 @@
+;
+;	File 'topol.top' was generated
+;	By user: vaxine (1000)
+;	On host: vgpu1
+;	At date: Tue Jun 25 13:09:21 2024
+;
+;	This is a standalone topology file
+;
+;	Created by:
+;	                    :-) GROMACS - gmx pdb2gmx, 2022.6 (-:
+;	
+;	Executable:   /usr/local/gromacs/bin/gmx
+;	Data prefix:  /usr/local/gromacs
+;	Working dir:  /media/vaxine/Expansion/Gromacs Base/Gromacs_MDS_Automation/Gromacs_MDS_Automation/Protein MDS/protein1
+;	Command line:
+;	  gmx pdb2gmx -f ./protein1.pdb -ignh
+;	Force field was read from the standard GROMACS share directory.
+;
+
+; Include forcefield parameters
+#include "charmm36-jul2022.ff/forcefield.itp"
+
+; Include chain topologies
+#include "topol_Protein_chain_A.itp"
+#include "topol_Protein_chain_B.itp"
+
+; Include water topology
+#include "charmm36-jul2022.ff/tip3p.itp"
+
+#ifdef POSRES_WATER
+; Position restraint for each water oxygen
+[ position_restraints ]
+;  i funct       fcx        fcy        fcz
+   1    1       1000       1000       1000
+#endif
+
+; Include topology for ions
+#include "charmm36-jul2022.ff/ions.itp"
+
+[ system ]
+; Name
+2 hTLR7 in water
+
+[ molecules ]
+; Compound        #mols
+Protein_chain_A     1
+Protein_chain_B     1
+SOL         57459
+CL               18
