@@ -19,6 +19,7 @@ This repository contains scripts to automate the process of setting up and runni
    ```bash
    bash step1_1_groAndTopolFileGeneration.sh
    ```
+4. Script will ask user to give the name of protein which is present in parent directory as well as in each folders.
 
 ### Step 4: Run GROMACS Simulation
 
@@ -35,15 +36,9 @@ This repository contains scripts to automate the process of setting up and runni
 ├── Parent Folder
 │   ├── step1_1_groAndTopolFileGeneration.sh
 │   ├── step1_2_gromacsauto.sh
-├── LIG1_folder
+├── Protein_folder
 │   ├── final_TLR7.pdb
 │   ├── *.mdp
-├── LIG2_folder
-│   ├── final_TLR7.pdb
-│   ├── *.mdp
-.
-.
-.
 ```
 
 ## Notes
