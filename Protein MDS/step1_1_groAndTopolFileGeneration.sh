@@ -35,11 +35,16 @@ run_command_in_folders() {
     for folder in "${selected_folders[@]}"; do
         echo "Processing folder: $folder"
         cd "$folder" || continue
-        echo -e "8\n1" | gmx pdb2gmx -f final_TLR7.pdb -ignh
+        echo -e "8\n1" | gmx pdb2gmx -f "$file_name" -ignh
         cd ..
     done
 }
 
 # Main script execution
 select_folders
+
+# Enable tab completion for file name input
+echo "Enter the file name for the -f option (e.g., final_TLR8.pdb):"
+read -e -p "> " file_name
+
 run_command_in_folders

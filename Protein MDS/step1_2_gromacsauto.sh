@@ -142,8 +142,8 @@ run_command_in_folders() {
 }
 
 # Main script execution
-read -p "Enter the start time in ns: " start_ns
-read -p "Enter the end time in ns: " end_ns
+read -p "Enter the start time in nano seconds (typically 0) : " start_ns
+read -p "Enter the end time in nano seconds : " end_ns
 
 start_nstep=$(convert_ns_to_nsteps $start_ns)
 end_nstep=$(convert_ns_to_nsteps $end_ns)
