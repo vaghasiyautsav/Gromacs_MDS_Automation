@@ -38,8 +38,6 @@ Select folders (enter numbers separated by spaces, press 'd' when done): 1 2 d
 
 - I have kept two seperate bash script just in case anyone wants to do experiment on scripts. 
 
-
-
 ## Directory Structure
 
 ```
