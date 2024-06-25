@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Source GROMACS environment
+source /usr/local/gromacs/bin/GMXRC
+
 # Function to display folders and get user selection
 select_folders() {
     echo "Available folders:"

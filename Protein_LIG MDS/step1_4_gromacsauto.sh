@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Source GROMACS environment
+source /usr/local/gromacs/bin/GMXRC
+
 # Function to display folders and get user selection
 select_folders() {
     echo "Available folders:"
@@ -28,6 +31,19 @@ select_folders() {
             fi
         done
     done
+}
+
+# Function to convert ns to nsteps
+convert_ns_to_nsteps() {
+    local ns=$1
+    echo $((ns * 500000))
+}
+
+# Function to update nsteps in md.mdp file
+update_md_mdp() {
+    local folder=$1
+    local nsteps=$2
+    sed -i "s/^nsteps.*/nsteps                  = $nsteps/" "$folder/md.mdp"
 }
 
 # Function to run the command in each selected folder
@@ -95,33 +111,33 @@ run_command_in_folders() {
         if [[ ! -f md_noPBC1.xtc ]]; then
             echo -e "20\n0" | gmx trjconv -s md_0_10.tpr -f md_noPBC.xtc -o md_noPBC1.xtc -pbc mol -center -n -ur compact
         fi
-
+        
         if [[ ! -f md_fit.xtc ]]; then
             echo -e "4\n0" | gmx trjconv -s md_0_10.tpr -f md_noPBC1.xtc -o md_fit.xtc -fit rot+trans
         fi
 
         if [[ ! -f start_protein.pdb ]]; then
-            echo -e "1\n" | gmx trjconv -s md_0_10.tpr -f md_noPBC1.xtc -o start_protein.pdb -dump 0
+            echo -e "1\n" | gmx trjconv -s md_0_10.tpr -f md_noPBC1.xtc -o start_protein.pdb -dump $start_nstep
         fi
 
         if [[ ! -f end_protein.pdb ]]; then
-            echo -e "1\n" | gmx trjconv -s md_0_10.tpr -f md_noPBC1.xtc -o end_protein.pdb -dump 11000000
+            echo -e "1\n" | gmx trjconv -s md_0_10.tpr -f md_noPBC1.xtc -o end_protein.pdb -dump $end_nstep
         fi
 
         if [[ ! -f start_LIG.pdb ]]; then
-            echo -e "13\n" | gmx trjconv -s md_0_10.tpr -f md_noPBC1.xtc -o start_LIG.pdb -dump 0
+            echo -e "13\n" | gmx trjconv -s md_0_10.tpr -f md_noPBC1.xtc -o start_LIG.pdb -dump $start_nstep
         fi
 
         if [[ ! -f end_LIG.pdb ]]; then
-            echo -e "13\n" | gmx trjconv -s md_0_10.tpr -f md_noPBC1.xtc -o end_LIG.pdb -dump 11000000
+            echo -e "13\n" | gmx trjconv -s md_0_10.tpr -f md_noPBC1.xtc -o end_LIG.pdb -dump $end_nstep
         fi
 
         if [[ ! -f start_complex_Prot_LIG.pdb ]]; then
-            echo -e "20\n" | gmx trjconv -s md_0_10.tpr -f md_noPBC1.xtc -o start_complex_Prot_LIG.pdb -dump 0 -n index.ndx
+            echo -e "20\n" | gmx trjconv -s md_0_10.tpr -f md_noPBC1.xtc -o start_complex_Prot_LIG.pdb -dump $start_nstep -n index.ndx
         fi
 
         if [[ ! -f end_complex_Prot_LIG.pdb ]]; then
-            echo -e "20\n" | gmx trjconv -s md_0_10.tpr -f md_noPBC1.xtc -o end_complex_Prot_LIG.pdb -dump 11000000 -n index.ndx
+            echo -e "20\n" | gmx trjconv -s md_0_10.tpr -f md_noPBC1.xtc -o end_complex_Prot_LIG.pdb -dump $end_nstep -n index.ndx
         fi
 
         if [[ ! -f rmsd_protein.xvg ]]; then
@@ -153,6 +169,16 @@ run_command_in_folders() {
 }
 
 # Main script execution
-select_folders
-run_command_in_folders
+read -p "Enter the start time in nano seconds (typically 0) : " start_ns
+read -p "Enter the end time in nano seconds : " end_ns
 
+start_nstep=$(convert_ns_to_nsteps $start_ns)
+end_nstep=$(convert_ns_to_nsteps $end_ns)
+
+select_folders
+
+for folder in "${selected_folders[@]}"; do
+    update_md_mdp "$folder" "$end_nstep"
+done
+
+run_command_in_folders
