@@ -89,11 +89,15 @@ run_command_in_folders() {
         fi
 
         if [[ ! -f md_noPBC.xtc ]]; then
-            gmx trjconv -s md_0_10.tpr -f md_0_10.xtc -o md_noPBC.xtc -pbc cluster -center -n -ur compact
+            echo -e "1\n20\n0" | gmx trjconv -s md_0_10.tpr -f md_0_10.xtc -o md_noPBC.xtc -pbc cluster -center -n -ur compact
         fi
 
         if [[ ! -f md_noPBC1.xtc ]]; then
-            gmx trjconv -s md_0_10.tpr -f md_noPBC.xtc -o md_noPBC1.xtc -pbc mol -center -n -ur compact
+            echo -e "20\n0" | gmx trjconv -s md_0_10.tpr -f md_noPBC.xtc -o md_noPBC1.xtc -pbc mol -center -n -ur compact
+        fi
+
+        if [[ ! -f md_fit.xtc ]]; then
+            echo -e "4\n0" | gmx trjconv -s md_0_10.tpr -f md_noPBC1.xtc -o md_fit.xtc -fit rot+trans
         fi
 
         if [[ ! -f start_protein.pdb ]]; then
