@@ -36,6 +36,13 @@ convert_ns_to_nsteps() {
     echo $((ns * 500000))
 }
 
+# Function to update nsteps in md.mdp file
+update_md_mdp() {
+    local folder=$1
+    local nsteps=$2
+    sed -i "s/^nsteps.*/nsteps                  = $nsteps/" "$folder/md.mdp"
+}
+
 # Function to run the command in each selected folder
 run_command_in_folders() {
     for folder in "${selected_folders[@]}"; do
@@ -142,4 +149,9 @@ start_nstep=$(convert_ns_to_nsteps $start_ns)
 end_nstep=$(convert_ns_to_nsteps $end_ns)
 
 select_folders
+
+for folder in "${selected_folders[@]}"; do
+    update_md_mdp "$folder" "$end_nstep"
+done
+
 run_command_in_folders
