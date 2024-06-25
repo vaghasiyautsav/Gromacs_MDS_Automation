@@ -59,16 +59,24 @@ This repository contains scripts to automate the process of setting up and runni
 ## Directory Structure
 
 ```
-├── mdp_Files
-│   ├── *.mdp
-├── protein_folder
-│   ├── final_TLR7.pdb
-│   ├── LIG.itp
-│   ├── LIG.pdb
+├── Parent Folder
 │   ├── step1_1_groAndTopolFileGeneration.sh
 │   ├── step1_2_topolfileupdate.py
 │   ├── step1_3_edit_confgrofile.py
 │   ├── step1_4_gromacsauto.sh
+├── LIG1_folder
+│   ├── final_TLR7.pdb
+│   ├── LIG.itp
+│   ├── LIG.pdb
+│   ├── *.mdp
+├── LIG2_folder
+│   ├── final_TLR7.pdb
+│   ├── LIG.itp
+│   ├── LIG.pdb
+│   ├── *.mdp
+.
+.
+.
 ```
 
 ## Notes
