@@ -1,0 +1,18 @@
+#gromacs code 
+
+gromacsgpu
+
+gmx pdb2gmx -f unliganded_TLR7.pdb -ignh
+
+gmx editconf -f conf.gro -o newbox.gro -bt dodecahedron -d 1.0 && gmx solvate -cp newbox.gro -cs spc216.gro -p topol.top -o solv.gro && gmx grompp -f ions.mdp -c solv.gro -p topol.top -o ions.tpr &&  echo -e "13\n" | gmx genion -s ions.tpr -o solv_ions.gro -p topol.top -pname NA -nname CL -neutral && gmx grompp -f em.mdp -c solv_ions.gro -p topol.top -o em.tpr -maxwarn 1 && gmx mdrun -deffnm em -v -nb gpu 
+
+echo -e "q\n" | gmx make_ndx -f em.gro -o index.ndx && gmx grompp -f nvt.mdp -c em.gro -r em.gro -p topol.top -n index.ndx -o nvt.tpr && gmx mdrun -deffnm nvt -nb gpu -v && gmx grompp -f npt.mdp -c nvt.gro -t nvt.cpt -r nvt.gro -p topol.top -n index.ndx -o npt.tpr -maxwarn 1 && gmx mdrun -deffnm npt -nb gpu -v && gmx grompp -f md.mdp -c npt.gro -t npt.cpt -p topol.top -n index.ndx -o md_0_10.tpr && gmx mdrun -deffnm md_0_10 -nb gpu -v
+
+
+gmx trjconv -s md_0_10.tpr -f md_0_10.xtc -o md_noPBC.xtc -pbc cluster -center -n -ur compact && gmx trjconv -s md_0_10.tpr -f md_noPBC.xtc -o md_noPBC1.xtc -pbc mol -center -n -ur compact
+
+echo -e "1\n" | gmx trjconv -s md_0_10.tpr -f md_noPBC1.xtc -o start_protein.pdb -dump 0 ; echo -e "1\n" | gmx trjconv -s md_0_10.tpr -f md_noPBC1.xtc -o end_protein.pdb -dump 11000000
+
+
+echo -e "1\n1" | gmx rms -s md_0_10.tpr -f md_noPBC1.xtc -o rmsd_protein.xvg -tu ns -n index.ndx && echo -e "1\n" | gmx rmsf -s md_0_10.tpr -f md_noPBC1.xtc -o rmsf_residue.xvg -res -n index.ndx &&  echo -e "1\n" | gmx gyrate -s md_0_10.tpr -f md_noPBC1.xtc -o rg.xvg -n index.ndx && echo -e "1\n13" | gmx hbond -s md_0_10.tpr -f md_noPBC1.xtc -num hbond.xvg -n index.ndx && echo -e "9 10 0\n" | gmx energy -f md_0_10.edr -o interaction_energy.xvg
+
