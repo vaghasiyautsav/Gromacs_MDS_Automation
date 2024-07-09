@@ -81,7 +81,7 @@ run_command_in_folders() {
         fi
 
         if [[ ! -f em.gro ]]; then
-            gmx mdrun -deffnm em -v -nb gpu
+            gmx mdrun -deffnm em -v -nb gpu -ntmpi 1 -ntomp 1
         fi
 
         if [[ ! -f index.ndx ]]; then
